@@ -1,38 +1,67 @@
 import React, { useState } from 'react'
 
-const Display = (props) => {
-  return(
-    <div>{props.counter}</div>
+const Button = ({ onClick, text }) => {
+  return (
+    <button onClick={onClick}> {text} </button>
   )
 }
 
-const Button = (props) => {
+const StatisticLine = ({ text, value }) => (<>{text} {value}</>)
+
+const Statistics = ({ good, neutral, bad, all }) => {
+
+  if(all.length === 0){
+    return (
+      <p> No feedback given </p>
+    )
+  }
+
+  const avg = (good - bad) / all.length
+  const pos = good / all.length
+
   return (
-    <button onClick={props.onClick}>
-      {props.text}
-    </button>
+    <table>
+      <tbody>
+        <tr><td><StatisticLine text={'good'} value={good} /></td></tr>
+        <tr><td><StatisticLine text={'neutral'} value={neutral} /></td></tr>
+        <tr><td><StatisticLine text={'bad'} value={bad} /></td></tr>
+        <tr><td><StatisticLine text={'all'} value={all.length} /></td></tr>
+        <tr><td><StatisticLine text={'average'} value={avg} /></td></tr>
+        <tr><td><StatisticLine text={'positive'} value={pos*100 + ' %'} /></td></tr>
+      </tbody>
+    </table>
   )
 }
 
 const App = () => {
-  const [ counter, setCounter ] = useState(0)
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const [all, setAll] = useState([])
 
-  const increaseByOne = () => setCounter(counter + 1)
-  const setToZero = () => setCounter(0)
-  const decreaseByOne = () => setCounter(counter - 1)
 
-  const handleClick = () => {
-    console.log('clicked');
+  const handleGood = () => {
+    setGood(good + 1)
+    setAll(all + 1)
+  }
+  const handleNeutral = () => {
+    setNeutral(neutral + 1)
+    setAll(all + 1)
+  }
+  const handleBad = () => {
+    setBad(bad + 1)
+    setAll(all + 1)
   }
 
   return (
     <div>
-      <Display counter={counter} />
-      <Button onClick={increaseByOne} text='plus' />
-      <Button onClick={setToZero} text='zero' />
-      <Button onClick={decreaseByOne} text='minus' />
+      <h1>give feedback</h1>
+      <Button onClick={handleGood} text='good' />
+      <Button onClick={handleNeutral} text='neutral' />
+      <Button onClick={handleBad} text='bad' />
+      <h1>statistics</h1>
+      <Statistics good={good} neutral={neutral} bad={bad} all={all} />
     </div>
-
   )
 }
 
