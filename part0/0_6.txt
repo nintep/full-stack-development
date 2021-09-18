@@ -1,0 +1,18 @@
+title Exercise 0.6
+
+note over Browser:
+browser adds the new note to the 
+notes list and rerenders the list
+end note
+
+note over Browser:
+browser sens the new note to the server
+end note
+
+Browser->Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over Server:
+server adds the note to the list of notes
+end note
+
+Server->Browser: Status code 201 is sent to the browser
