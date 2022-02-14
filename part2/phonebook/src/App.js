@@ -119,7 +119,6 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
     }
     if (persons.map(person => person.name).includes(personObject.name)){
 
@@ -130,10 +129,10 @@ const App = () => {
         personService
           .update(personToUpdate.id, { ...personToUpdate, number: newNumber })
           .then(returnedPerson => {
-            setPersons(persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson))
             setNewName('')
             setNewNumber('')
             setNotifMessage(`Updated ${returnedPerson.name}'s number`)
+            setPersons(persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson))
             setTimeout(() => {
               setNotifMessage(null)
             }, 5000)
@@ -158,6 +157,14 @@ const App = () => {
           setNotifMessage(`Added ${newPerson.name}`)
           setTimeout(() => {
             setNotifMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          const message = error.response.data.error
+          console.log(message)
+          setErrorMessage(message)
+          setTimeout(() => {
+            setErrorMessage(null)
           }, 5000)
         })
     }
