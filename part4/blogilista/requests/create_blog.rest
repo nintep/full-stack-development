@@ -2,9 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Bird Tips for Birds",
-  "author": "Tii",
-  "url": "www.bird.gov",
-  "likes": 1
+  "title": "Bird Tips for Birds 2",
+  "author": "Tyy",
+  "url": "www.bird2.gov",
+  "likes": 0
 
 }
