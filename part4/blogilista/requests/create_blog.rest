@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Bird Tips for Birds",
+  "author": "Tii",
+  "url": "www.bird.gov",
+  "likes": 1
+
+}
