@@ -97,6 +97,60 @@ test('blog without url cannot be added', async () => {
     .expect(400)
 })
 
+test('deletion of a blog succeeds with status code 204 if id is valid', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd).toHaveLength(
+    blogsAtStart.length - 1
+  )
+
+  const titles = blogsAtEnd.map(r => r.title)
+
+  expect(titles).not.toContain(blogToDelete.title)
+})
+
+test('deletion of a blog fails with status code 400 if id is not valid', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+
+  const fakeId = await helper.nonExistingId()
+
+  await api
+    .delete(`/api/blogs/${fakeId}`)
+    .expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd).toHaveLength(
+    blogsAtStart.length
+  )
+
+})
+
+test('blog likes can be updated', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+
+  const likeAmountAtStart = blogToUpdate.likes
+  blogToUpdate.likes += 10
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(blogToUpdate)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd[0].likes).toEqual(likeAmountAtStart + 10)
+
+})
 
 afterAll(() => {
   mongoose.connection.close()
