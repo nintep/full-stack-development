@@ -17,7 +17,6 @@ const App = () => {
   //login form
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
   //user token
   const [user, setUser] = useState(null)
 
@@ -25,39 +24,32 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
     )
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
-
     try {
       const user = await loginService.login({
         username, password,
       })
-
-      window.localStorage.setItem(
-        'loggedBlogAppUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
       setUser(user)
+      blogService.setToken(user.token)
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      ) 
       setUsername('')
       setPassword('')
-
-      setNotificationMessage('logged in')
-      setTimeout(() => {
-        setNotificationMessage(null)
-      }, 5000)
-
     } catch (exception) {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
@@ -67,7 +59,7 @@ const App = () => {
   }
 
   const handleLogout = async () => {
-    window.localStorage.removeItem('loggedBlogAppUser')
+    window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
     setNotificationMessage('logged out')
     setTimeout(() => {
@@ -80,7 +72,7 @@ const App = () => {
     const returnedBlog = await blogService.create(blogObject)
     if(returnedBlog)
     {
-      setBlogs(blogs.concat(returnedBlog))
+      setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
 
       setNotificationMessage(`A new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
       setTimeout(() => {
@@ -89,7 +81,7 @@ const App = () => {
     }
   }
 
-  const likeBlog = async (id, blogObject) => {
+  const likeBlog = async (id) => {
     const blog = blogs.find(n => n.id === id)
     const changedBlog = {
       title: blog.title,
@@ -101,7 +93,7 @@ const App = () => {
 
     try {
       const returnedBlog = await blogService.update(id, changedBlog)
-      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog).sort((a, b) => b.likes - a.likes))
       
     } catch (exception) {
       setErrorMessage(`Blog '${blog.title}' was already removed from server`)
@@ -109,6 +101,16 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
       setBlogs(blogs.filter(n => n.id !== id))
+    }
+  }
+
+  const removeBlog = async (id) => {
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter(n => n.id !== id))
+
+    } catch (exception) {
+
     }
   }
 
@@ -145,7 +147,11 @@ const App = () => {
       <p>{user.name} logged in <button type="submit" onClick = {handleLogout}>logout</button></p>
       {blogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} likeClicked={likeBlog} />
+        <Blog key={blog.id} 
+          blog={blog} 
+          currentUser={user.username} 
+          likeClicked={likeBlog} 
+          removeClicked={removeBlog}/>
       )}
     </div>
   )
