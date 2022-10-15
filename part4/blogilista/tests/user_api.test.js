@@ -9,12 +9,12 @@ const User = require('../models/user')
 
 //...
 
-describe('when there is initially one user at db', () => {
+describe('when there is initially two users at db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
     const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ username: 'root', passwordHash })
+    const user = new User({ username: 'root',name: 'root', passwordHash })
 
     await user.save()
   })
