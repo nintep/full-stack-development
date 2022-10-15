@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const User = require('../models/user')
+
 
 const blogSchema = mongoose.Schema({
   title: String,
@@ -19,4 +21,7 @@ blogSchema.set('toJSON', {
   }
 })
 
-module.exports = mongoose.model('Blog', blogSchema)
+//module.exports = mongoose.model('Blog', blogSchema)
+
+const Blog = mongoose.model('Blog', blogSchema)
+module.exports = Blog

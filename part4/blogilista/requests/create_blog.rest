@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNpaWxpIiwiaWQiOiI2MzRhYTc1YTJjZTkxMmViY2M2MzYzNTciLCJpYXQiOjE2NjU4MzY5MjB9.Xo8zlZ_hiPVAHsHQ895sJWaR6mi-Dz02kNhxE_2xyBY
 
 {
-  "title": "Bird Tips for Birds 2",
+  "title": "Hedgehog chillhop beats for studying",
   "author": "Tyy",
   "url": "www.bird2.gov",
   "likes": 0
-
 }
