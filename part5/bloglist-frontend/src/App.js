@@ -13,7 +13,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
-  
+
   //login form
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -47,7 +47,7 @@ const App = () => {
       blogService.setToken(user.token)
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -72,7 +72,9 @@ const App = () => {
     const returnedBlog = await blogService.create(blogObject)
     if(returnedBlog)
     {
-      setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
+      blogService.getAll().then(blogs =>
+        setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
+      )
 
       setNotificationMessage(`A new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
       setTimeout(() => {
@@ -92,9 +94,11 @@ const App = () => {
     }
 
     try {
-      const returnedBlog = await blogService.update(id, changedBlog)
-      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog).sort((a, b) => b.likes - a.likes))
-      
+      await blogService.update(id, changedBlog)
+      blogService.getAll().then(blogs =>
+        setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
+      )
+
     } catch (exception) {
       setErrorMessage(`Blog '${blog.title}' was already removed from server`)
       setTimeout(() => {
@@ -110,7 +114,10 @@ const App = () => {
       setBlogs(blogs.filter(n => n.id !== id))
 
     } catch (exception) {
-
+      setErrorMessage('Blog was already removed from server')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
   }
 
@@ -134,7 +141,7 @@ const App = () => {
           handleUsernameChange={({ target }) => setUsername(target.value)}
           handlePasswordChange={({ target }) => setPassword(target.value)}
           handleSubmit={handleLogin}
-        />        
+        />
       </div>
     )
   }
@@ -147,10 +154,10 @@ const App = () => {
       <p>{user.name} logged in <button type="submit" onClick = {handleLogout}>logout</button></p>
       {blogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} 
-          blog={blog} 
-          currentUser={user.username} 
-          likeClicked={likeBlog} 
+        <Blog key={blog.id}
+          blog={blog}
+          currentUser={user.username}
+          likeClicked={likeBlog}
           removeClicked={removeBlog}/>
       )}
     </div>
