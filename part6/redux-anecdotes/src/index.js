@@ -4,8 +4,6 @@ import { Provider } from 'react-redux'
 import App from './App'
 import Store from './store'
 
-console.log(Store.getState())
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={Store}>
     <App />
