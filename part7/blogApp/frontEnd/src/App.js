@@ -17,13 +17,18 @@ import Togglable from './components/Togglable'
 import loginService from './services/login'
 
 const Home = ({ blogFormRef, createBlog }) => {
+  const style = {
+    padding: 3,
+    margin: 5,
+  }
+
   return (
-    <>
+    <div style={style}>
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <NewBlogForm onCreate={createBlog} />
       </Togglable>
       <BlogList />
-    </>
+    </div>
   )
 }
 
@@ -68,8 +73,9 @@ const App = () => {
     dispatch(setNotification({ message, type }, 5000))
   }
 
-  const padding = {
-    padding: 5,
+  const style = {
+    padding: 3,
+    margin: 5,
   }
 
   if (user === null) {
@@ -83,16 +89,16 @@ const App = () => {
 
   return (
     <Router>
-      <div>
+      <div style={style}>
         <h2>blogs</h2>
         {user.name} logged in
         <button onClick={logout}>logout</button>
       </div>
       <div>
-        <Link style={padding} to="/">
+        <Link style={style} to="/">
           home
         </Link>
-        <Link style={padding} to="/users">
+        <Link style={style} to="/users">
           users
         </Link>
       </div>
