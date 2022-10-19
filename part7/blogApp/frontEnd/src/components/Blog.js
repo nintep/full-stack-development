@@ -12,12 +12,11 @@ const BlogDetails = ({ blog, visible, likeBlog, removeBlog, own }) => {
         <a href={blog.url}>{blog.url}</a>
       </div>
       <div>
-        {blog.likes} likes <button onClick={() => likeBlog(blog.id)}>like</button>
+        {blog.likes} likes{' '}
+        <button onClick={() => likeBlog(blog.id)}>like</button>
       </div>
       {addedBy}
-      {own&&<button onClick={() => removeBlog(blog.id)}>
-        remove
-      </button>}
+      {own && <button onClick={() => removeBlog(blog.id)}>remove</button>}
     </div>
   )
 }
@@ -33,7 +32,7 @@ const Blog = ({ blog, likeBlog, removeBlog, user }) => {
   }
 
   return (
-    <div style={style} className='blog'>
+    <div style={style} className="blog">
       {blog.title} {blog.author}
       <button onClick={() => setVisible(!visible)}>
         {visible ? 'hide' : 'view'}
@@ -43,7 +42,7 @@ const Blog = ({ blog, likeBlog, removeBlog, user }) => {
         visible={visible}
         likeBlog={likeBlog}
         removeBlog={removeBlog}
-        own={blog.user && user.username===blog.user.username}
+        own={blog.user && user.username === blog.user.username}
       />
     </div>
   )
@@ -58,7 +57,7 @@ Blog.propTypes = {
     user: PropTypes.shape({
       username: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-    })
+    }),
   }).isRequired,
   user: PropTypes.shape({
     username: PropTypes.string.isRequired,
