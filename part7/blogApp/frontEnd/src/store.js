@@ -1,18 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import blogReducer from './reducers/blogReducer'
 import notificationReducer from './reducers/notificationReducer'
+import userReducer from './reducers/userReducer'
 
 const Store = configureStore({
   reducer: {
     notification: notificationReducer,
     blogs: blogReducer,
+    user: userReducer,
   },
 })
-
-/* anecdoteService.getAll().then(anecdotes =>
-  Store.dispatch(setAnecdotes(anecdotes))
-) */
-
-//Store.dispatch(initializeAnecdotes())
 
 export default Store
